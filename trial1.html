@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kindness Piggy - Blockchain Charity</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="Styles/1styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <svg width="30" height="30" viewBox="0 0 100 100">
+          <rect width="100" height="100" fill="#ff69b4" />
+          <circle cx="35" cy="35" r="10" fill="#000" />
+          <circle cx="65" cy="35" r="10" fill="#000" />
+          <path d="M30 65 Q50 80 70 65" stroke="#000" stroke-width="8" fill="none" />
+        </svg>
+        KINDNESSPIGGY
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home">HOME</a></li>
+        <li><a href="#about">BLOCKCHAIN</a></li>
+        <li><a href="#game">PIGGYBANK</a></li>
+      </ul>
+      <button class="connect-btn" id="connectBtn">CONNECT WALLET</button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>FEED THE PIGGY<br>SAVE THE WORLD</h1>
+          <p>A blockchain-powered charity initiative where every coin counts. Donate, earn badges, and make a real impact!</p>
+          <button class="cta-button" id="startPlayingBtn">START PLAYING</button>
+        </div>
+        <div class="hero-image">
+          <img src="Images/Piggy-bank.jpg" alt="Pixel Art Piggy Bank" class="glowing-piggy" />
+        </div>
+      </div>
+    </div>
+    <div class="pixel-decoration pixel-1">💰</div>
+    <div class="pixel-decoration pixel-2">💰</div>
+    <div class="pixel-decoration pixel-3">💰</div>
+  </section>
+
+  <!-- ABOUT BLOCKCHAIN SECTION -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>BLOCKCHAIN TECHNOLOGY</h2>
+        <p>Understanding the tech behind our charitable piggybank</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <h3>WHAT IS BLOCKCHAIN?</h3>
+          <p>Blockchain is a distributed ledger that records transactions across many computers. It ensures transparency and security through decentralization.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💰</div>
+          <h3>CRYPTO DONATIONS</h3>
+          <p>Cryptocurrency donations have lower fees, faster processing, and complete transparency. Every donation is permanently recorded on the blockchain.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3>GLOBAL IMPACT</h3>
+          <p>With blockchain, we accept donations from anywhere, making a truly global impact without geographical or financial barriers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME SECTION -->
+  <section id="game" class="game-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>PIGGYBANK GAME</h2>
+        <p>Feed the piggy, burst the bank, earn badges!</p>
+      </div>
+      <div class="game-container" id="gameContainer">
+        <div class="kp-layout">
+          <div class="kp-left">
+            <div class="kp-piggy-area">
+              <div class="kp-scenery">
+                <div class="kp-cloud kp-cloud--1"></div>
+                <div class="kp-cloud kp-cloud--2"></div>
+                <div class="kp-cloud kp-cloud--3"></div>
+                <div class="kp-grass"></div>
+              </div>
+              <div class="kp-piggy" id="piggy" aria-label="Piggy"></div>
+              <div class="kp-coins" id="coins"></div>
+            </div>
+            <div class="kp-progress">
+              <div class="kp-progress-bar" id="progressBar"></div>
+            </div>
+            <div class="kp-alert" id="alertBox">
+              <h3>Time to help!</h3>
+              <p>Donate and feed the piggy. Reach 100 coins to burst!</p>
+              <div class="kp-donate-row">
+                <select id="networkSelect" class="kp-select">
+                  <option value="ethereum">Ethereum</option>
+                </select>
+                <select id="cryptoSelect" class="kp-select">
+                  <option value="ETH">ETH</option>
+                </select>
+              </div>
+              <div class="kp-donate-row">
+                <input id="recipientAddress" class="kp-input" placeholder="Recipient 0x..." />
+              </div>
+              <div class="kp-donate-row">
+                <button class="kp-btn donate" data-coins="5" data-eth="0.0005">Donate 5</button>
+                <button class="kp-btn donate" data-coins="20" data-eth="0.002">Donate 20</button>
+                <button class="kp-btn donate" data-coins="50" data-eth="0.005">Donate 50</button>
+              </div>
+              <div class="kp-note">Transactions send from your connected wallet to the recipient address.</div>
+            </div>
+            <div class="kp-celebration" id="celebration"></div>
+          </div>
+          <div class="kp-right">
+            <div class="kp-card">
+              <div class="kp-row">
+                <div class="kp-label">Wallet</div>
+                <div class="kp-value" id="walletAddress">Not connected</div>
+              </div>
+              <div class="kp-row">
+                <div class="kp-label">Recipient</div>
+                <div class="kp-value" id="recipientAddressValue">—</div>
+              </div>
+              <div class="kp-row">
+                <div class="kp-label">Piggies Burst</div>
+                <div class="kp-value" id="piggyCount">0</div>
+              </div>
+              <div class="kp-row">
+                <div class="kp-label">Total Coins</div>
+                <div class="kp-value" id="totalCoins">0</div>
+              </div>
+              <div class="kp-row">
+                <div class="kp-label">Total Donated</div>
+                <div class="kp-value" id="totalDonatedEth">0 ETH</div>
+              </div>
+              <div class="kp-row">
+                <div class="kp-label">Last Tx</div>
+                <div class="kp-value" id="lastTx">—</div>
+              </div>
+            </div>
+            <div class="kp-card">
+              <h4>Badges</h4>
+              <div class="kp-badges">
+                <div class="kp-badge" id="badge1" title="Burst 5 piggies"><div class="kp-badge-inner">1</div></div>
+                <div class="kp-badge" id="badge2" title="Burst 10 piggies"><div class="kp-badge-inner">2</div></div>
+                <div class="kp-badge" id="badge3" title="Burst 20 piggies"><div class="kp-badge-inner">3</div></div>
+              </div>
+              <div class="kp-hof" id="hallOfFame" style="display:none;">All three badges achieved! You're recognised on the platform 🎉</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pixel-decoration pixel-1">🐷</div>
+    <div class="pixel-decoration pixel-2">⭐</div>
+    <div class="pixel-decoration pixel-3">🐷</div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>ABOUT THE PROJECT</h3>
+          <p>KindnessPiggy is a blockchain charity project that turns your crypto into real-world impact through gamification.</p>
+        </div>
+        <div class="footer-column">
+          <h3>QUICK LINKS</h3>
+          <a href="#home">HOME</a>
+          <a href="#about">BLOCKCHAIN</a>
+          <a href="#game">PIGGYBANK</a>
+        </div>
+        <div class="footer-column">
+          <h3>CONTACT</h3>
+          <p>Email: honniganurn@gmail.com</p>
+          <p>Linkedin: www.linkedin.com/in/neho03/</p>
+          <p>Instagram: www.instagram.com/nehsaynae/</p>
+          <p>Github: github.com/jetsu03</p>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>Made with ❤️ by Neha H</p>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // No hardcoded recipients; will read from input
+    const DONATION_WALLETS = {};
+
+    // EVM chain params for adding/switching network
+    const CHAIN_PARAMS = {
+      ethereum: { chainId: '0x7A69', chainName: 'Localhost 8545', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 }, rpcUrls: ['http://127.0.0.1:8545'], blockExplorerUrls: [] }
+    };
+
+    // App state
+    let provider; let signer; let userAddress = null; let isConnected = false; let chainId = null;
+    let coins = 0; let piggies = 0; let totalEth = 0;
+
+    // DOM nodes
+    const connectBtn = document.getElementById('connectBtn');
+    const startBtn = document.getElementById('startPlayingBtn');
+    const walletAddressEl = document.getElementById('walletAddress');
+    const piggyEl = document.getElementById('piggy');
+    const coinsWrap = document.getElementById('coins');
+    const progressBar = document.getElementById('progressBar');
+    const alertBox = document.getElementById('alertBox');
+    const celebration = document.getElementById('celebration');
+    const piggyCountEl = document.getElementById('piggyCount');
+    const totalCoinsEl = document.getElementById('totalCoins');
+    const totalDonatedEthEl = document.getElementById('totalDonatedEth');
+    const badge1 = document.getElementById('badge1');
+    const badge2 = document.getElementById('badge2');
+    const badge3 = document.getElementById('badge3');
+    const hof = document.getElementById('hallOfFame');
+    const networkSelect = document.getElementById('networkSelect');
+    const recipientAddressValue = document.getElementById('recipientAddressValue');
+    const lastTxEl = document.getElementById('lastTx');
+    const recipientInput = document.getElementById('recipientAddress');
+    const donateButtons = Array.from(document.querySelectorAll('.kp-btn.donate'));
+
+    // Smooth scroll
+    if (startBtn) {
+      startBtn.addEventListener('click', () => document.getElementById('game').scrollIntoView({ behavior: 'smooth' }));
+    }
+
+    // Initial UI state for not connected wallet
+    resetStateToDefaults();
+    updateUI();
+    clearDisconnectedUI();
+    setDonationEnabled(false);
+    // Initialize recipient display
+    updateRecipientDisplay();
+
+    // Initialize connection status
+    detectExistingConnection();
+
+    // Connect / Disconnect wallet
+    connectBtn.addEventListener('click', async () => {
+      // If already connected, act as Disconnect
+      if (isConnected && userAddress) {
+        disconnectSession();
+        return;
+      }
+      try {
+        if (!window.ethereum) {
+          const install = confirm('MetaMask is not detected. Install it now?');
+          if (install) window.open('https://metamask.io/download', '_blank');
+          return;
+        }
+        connectBtn.disabled = true;
+        connectBtn.textContent = 'CONNECTING...';
+
+        // Create provider first, then request accounts via provider
+        provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+        await provider.send('eth_requestAccounts', []);
+        signer = provider.getSigner();
+        userAddress = await signer.getAddress();
+        try { chainId = (await provider.getNetwork()).chainId; } catch { chainId = null; }
+        walletAddressEl.textContent = short(userAddress);
+        isConnected = true;
+        loadStateFor(userAddress, chainId);
+        updateConnectButton();
+        setDonationEnabled(true);
+
+        // React to wallet changes
+        if (window.ethereum && window.ethereum.removeAllListeners) {
+          window.ethereum.removeAllListeners('accountsChanged');
+          window.ethereum.removeAllListeners('chainChanged');
+          window.ethereum.removeAllListeners('disconnect');
+        }
+        window.ethereum.on && window.ethereum.on('accountsChanged', (accounts) => {
+          if (accounts && accounts.length) {
+            userAddress = accounts[0];
+            walletAddressEl.textContent = short(userAddress);
+            isConnected = true;
+          } else {
+            disconnectSession();
+          }
+          updateConnectButton();
+          updateRecipientDisplay();
+        });
+        window.ethereum.on && window.ethereum.on('chainChanged', async () => {
+          provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+          try { chainId = (await provider.getNetwork()).chainId; } catch { chainId = null; }
+          if (userAddress) { loadStateFor(userAddress, chainId); updateUI(); }
+          else { resetStateToDefaults(); updateUI(); clearDisconnectedUI(); }
+        });
+        window.ethereum.on && window.ethereum.on('disconnect', () => {
+          disconnectSession();
+        });
+        showTxToast('Wallet connected');
+      } catch (e) {
+        console.error('Wallet connection error:', e);
+        const code = e && e.code ? ` (code ${e.code})` : '';
+        const msg = e && (e.message || e.toString ? e.toString() : 'Unknown error');
+        if (e && (e.code === 4001 || e.code === 'ACTION_REJECTED')) {
+          showTxToast('Connection request was rejected');
+        } else {
+          alert(`Failed to connect wallet${code}. ${msg}`);
+        }
+      }
+      finally {
+        connectBtn.disabled = false;
+        updateConnectButton();
+      }
+    });
+
+    function updateConnectButton() {
+      if (isConnected && userAddress) {
+        connectBtn.textContent = `DISCONNECT (${short(userAddress)})`;
+      } else {
+        connectBtn.textContent = 'CONNECT WALLET';
+      }
+    }
+
+    async function detectExistingConnection() {
+      try {
+        if (!window.ethereum) return;
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts && accounts.length) {
+          // Hydrate provider/signer and state
+          provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+          signer = provider.getSigner();
+          userAddress = accounts[0];
+          try { chainId = (await provider.getNetwork()).chainId; } catch { chainId = null; }
+          isConnected = true;
+          walletAddressEl.textContent = short(userAddress);
+          loadStateFor(userAddress, chainId);
+          setDonationEnabled(true);
+          updateConnectButton();
+          updateRecipientDisplay();
+          // Attach listeners so first auto-connect behaves like manual connect
+          if (window.ethereum && window.ethereum.removeAllListeners) {
+            window.ethereum.removeAllListeners('accountsChanged');
+            window.ethereum.removeAllListeners('chainChanged');
+            window.ethereum.removeAllListeners('disconnect');
+          }
+          window.ethereum.on && window.ethereum.on('accountsChanged', (accs) => {
+            if (accs && accs.length) {
+              userAddress = accs[0];
+              walletAddressEl.textContent = short(userAddress);
+              isConnected = true;
+            } else {
+              disconnectSession();
+            }
+            updateConnectButton();
+            updateRecipientDisplay();
+          });
+          window.ethereum.on && window.ethereum.on('chainChanged', async () => {
+            provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+            try { chainId = (await provider.getNetwork()).chainId; } catch { chainId = null; }
+            if (userAddress) { loadStateFor(userAddress, chainId); updateUI(); }
+            else { resetStateToDefaults(); updateUI(); clearDisconnectedUI(); }
+          });
+          window.ethereum.on && window.ethereum.on('disconnect', () => {
+            disconnectSession();
+          });
+        } else {
+          updateConnectButton();
+        }
+      } catch {}
+    }
+
+    function disconnectSession() {
+      userAddress = null; signer = null; provider = null; isConnected = false; chainId = null;
+      walletAddressEl.textContent = 'Not connected';
+      resetStateToDefaults();
+      updateUI();
+      clearDisconnectedUI();
+      setDonationEnabled(false);
+      updateConnectButton();
+      showTxToast('Disconnected');
+      updateRecipientDisplay();
+    }
+
+    // Network switching helper
+    async function ensureNetwork(netKey) {
+      const params = CHAIN_PARAMS[netKey];
+      if (!params || !window.ethereum) return;
+      try {
+        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: params.chainId }] });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [params] });
+        } else {
+          throw switchError;
+        }
+      }
+    }
+
+    // Donation buttons
+    document.querySelectorAll('.kp-btn.donate').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const addCoins = parseInt(btn.dataset.coins, 10);
+        const ethAmount = btn.dataset.eth;
+        const netKey = networkSelect.value;
+        const to = (recipientInput && recipientInput.value || '').trim();
+        try {
+          if (!signer) {
+            alert('Connect wallet first.');
+            return;
+          }
+          if (!to || !isValidAddress(to)) {
+            alert('Enter a valid recipient address (0x...).');
+            return;
+          }
+          await ensureNetwork(netKey);
+          // Send tx
+          let tx;
+          if (window.ethers && ethers.utils && signer) {
+            tx = await signer.sendTransaction({ to, value: ethers.utils.parseEther(ethAmount) });
+          } else {
+            // Fallback: raw RPC using window.ethereum
+            const hexValue = toHexWei(ethAmount);
+            const from = userAddress || (await window.ethereum.request({ method: 'eth_accounts' }))[0];
+            const params = [{ from, to, value: hexValue }];
+            const hash = await window.ethereum.request({ method: 'eth_sendTransaction', params });
+            // Wait basic delay; cannot await confirmation without provider
+            tx = { hash, wait: () => new Promise(res => setTimeout(res, 1500)) };
+          }
+          showTxToast(`Sending ${ethAmount} ${CHAIN_PARAMS[netKey].nativeCurrency.symbol}...`);
+          await tx.wait();
+          showTxToast('Donation confirmed! Thank you ❤️');
+          renderLastTx(netKey, tx.hash);
+          // Game effects
+          coins = Math.min(100, coins + addCoins);
+          totalEth = Number((Number(totalEth) + Number(ethAmount)).toFixed(6));
+          animatePiggy(addCoins);
+          sparkleCoins(addCoins);
+          updateUI();
+          if (coins >= 100) {
+            burstPiggy();
+          }
+          persist();
+        } catch (e) {
+          console.error(e);
+          alert('Transaction failed or was rejected.');
+        }
+      });
+    });
+
+    // UI helpers
+    function updateUI() {
+      progressBar.style.width = coins + '%';
+      piggyCountEl.textContent = piggies;
+      totalCoinsEl.textContent = coins;
+      totalDonatedEthEl.textContent = `${totalEth} ETH`;
+      updateBadges();
+      alertBox.style.display = coins < 100 ? 'block' : 'none';
+    }
+
+    function updateRecipientDisplay() {
+      if (!isConnected) { recipientAddressValue.textContent = '—'; return; }
+      const addr = (recipientInput && recipientInput.value || '').trim();
+      recipientAddressValue.textContent = addr ? short(addr) : '—';
+    }
+
+    function renderLastTx(netKey, hash) {
+      if (!hash) { lastTxEl.textContent = '—'; return; }
+      const base = (CHAIN_PARAMS[netKey].blockExplorerUrls && CHAIN_PARAMS[netKey].blockExplorerUrls[0]) || '';
+      if (base) {
+        const a = document.createElement('a');
+        a.href = base.replace(/\/$/, '') + '/tx/' + hash;
+        a.target = '_blank'; a.rel = 'noreferrer noopener';
+        a.textContent = short(hash);
+        lastTxEl.innerHTML = '';
+        lastTxEl.appendChild(a);
+      } else {
+        lastTxEl.textContent = short(hash);
+      }
+    }
+
+    function updateBadges() {
+      if (piggies >= 5) badge1.classList.add('active');
+      if (piggies >= 10) badge2.classList.add('active');
+      if (piggies >= 20) badge3.classList.add('active');
+      const all = badge1.classList.contains('active') && badge2.classList.contains('active') && badge3.classList.contains('active');
+      hof.style.display = all ? 'block' : 'none';
+    }
+
+    function persist() {
+      if (!userAddress) return;
+      localStorage.setItem(stateKey(userAddress, chainId), JSON.stringify({ coins, piggies, totalEth }));
+    }
+
+    function loadStateFor(address, cId) {
+      try {
+        const key = stateKey(address, cId);
+        const saved = JSON.parse(localStorage.getItem(key) || '{}');
+        coins = Number(saved.coins) || 0;
+        piggies = Number(saved.piggies) || 0;
+        totalEth = Number(saved.totalEth) || 0;
+      } catch { resetStateToDefaults(); }
+      updateUI();
+    }
+
+    function resetStateToDefaults() {
+      coins = 0; piggies = 0; totalEth = 0;
+    }
+
+    function stateKey(address, cId) {
+      const addr = (address || '').toLowerCase();
+      const chain = cId ? String(cId) : 'any';
+      return `kp_state_${addr}_${chain}`;
+    }
+
+    function burstPiggy() {
+      // Celebration
+      spawnCoins(20);
+      confetti(120);
+      piggies += 1;
+      coins = 0;
+      updateUI();
+      persist();
+      setTimeout(() => { progressBar.style.width = '0%'; }, 500);
+    }
+
+    function spawnCoins(n) {
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement('div');
+        c.className = 'kp-coin';
+        c.style.left = Math.random() * 90 + '%';
+        c.style.top = '0px';
+        coinsWrap.appendChild(c);
+        let y = 0; const speed = 2 + Math.random() * 4;
+        const id = setInterval(() => {
+          y += speed; c.style.top = y + 'px';
+          if (y > 260) { clearInterval(id); c.remove(); }
+        }, 16);
+      }
+    }
+
+    // Sparkle coins from pig location based on donation amount
+    function sparkleCoins(count) {
+      const rect = piggyEl.getBoundingClientRect();
+      const parentRect = coinsWrap.getBoundingClientRect();
+      const originX = rect.left - parentRect.left + rect.width * 0.6; // snout
+      const originY = rect.top - parentRect.top + rect.height * 0.5;
+      for (let i = 0; i < count; i++) {
+        const s = document.createElement('div');
+        s.className = 'kp-sparkle';
+        s.style.left = originX + 'px';
+        s.style.top = originY + 'px';
+        coinsWrap.appendChild(s);
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        const life = 600 + Math.random() * 600;
+        const scale = 0.6 + Math.random() * 0.8;
+        s.style.transform = `scale(${scale})`;
+        const start = Date.now();
+        const id = setInterval(() => {
+          const t = Date.now() - start;
+          const dx = Math.cos(angle) * speed * (t/8);
+          const dy = Math.sin(angle) * speed * (t/10) + 0.002 * t * t * 0.05; // gravity
+          s.style.left = (originX + dx) + 'px';
+          s.style.top = (originY + dy) + 'px';
+          s.style.opacity = String(1 - t / life);
+          if (t > life) { clearInterval(id); s.remove(); }
+        }, 16);
+      }
+    }
+
+    function confetti(n) {
+      celebration.style.display = 'block';
+      for (let i = 0; i < n; i++) {
+        const f = document.createElement('div');
+        f.className = 'kp-confetti';
+        f.style.left = Math.random() * 100 + '%';
+        f.style.top = '-10px';
+        f.style.backgroundColor = rand(['#f00','#0f0','#00f','#ff0','#f0f','#0ff']);
+        celebration.appendChild(f);
+        let y = -10; let x = parseFloat(f.style.left); const sy = 2 + Math.random() * 5; const sx = -1 + Math.random() * 2;
+        const id = setInterval(() => {
+          y += sy; x += sx; f.style.top = y + 'px'; f.style.left = x + '%';
+          if (y > window.innerHeight) { clearInterval(id); f.remove(); celebration.style.display = 'none'; }
+        }, 16);
+      }
+    }
+
+    function animatePiggy(amount) {
+      piggyEl.classList.remove('happy','stars','hearts');
+      if (amount >= 50) piggyEl.classList.add('hearts');
+      else if (amount >= 20) piggyEl.classList.add('stars');
+      else piggyEl.classList.add('happy');
+      setTimeout(() => { piggyEl.classList.remove('happy','stars','hearts'); }, 1200);
+    }
+
+    function showTxToast(msg) {
+      // quick minimal toast via alertBox subtitle
+      const n = document.createElement('div'); n.textContent = msg; n.className = 'kp-toast'; alertBox.appendChild(n);
+      setTimeout(() => n.remove(), 3000);
+    }
+
+    function short(addr) { return addr ? addr.slice(0,6) + '...' + addr.slice(-4) : ''; }
+
+    function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+    function toHexWei(eth) {
+      // Convert decimal ETH string to 0x-hex wei string
+      const [ints, decs=''] = String(eth).split('.');
+      const normalized = (ints || '0') + (decs + '000000000000000000').slice(0,18);
+      // BigInt conversion
+      const wei = BigInt(normalized);
+      let hex = wei.toString(16);
+      if (hex.length % 2) hex = '0' + hex;
+      return '0x' + hex;
+    }
+    function setDonationEnabled(enabled) {
+      donateButtons.forEach(b => b.disabled = !enabled);
+      if (recipientInput) recipientInput.disabled = !enabled;
+    }
+
+    function clearDisconnectedUI() {
+      if (recipientAddressValue) recipientAddressValue.textContent = '—';
+      if (lastTxEl) lastTxEl.textContent = '—';
+    }
+    // Update recipient on input / network change
+    networkSelect.addEventListener('change', updateRecipientDisplay);
+    recipientInput.addEventListener('input', updateRecipientDisplay);
+
+    function isValidAddress(addr) {
+      try {
+        return (window.ethers && ethers.utils) ? !!ethers.utils.getAddress(addr) : /^0x[a-fA-F0-9]{40}$/.test(addr);
+      } catch { return false; }
+    }
+  </script>
+  <style>
+    /* Minimal game UI styles scoped to kp- classes to avoid conflicts */
+    .kp-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .kp-left { position: relative; }
+    .kp-piggy-area { position: relative; width: 100%; max-width: 520px; height: 300px; border: 2px solid #ffd1e8; border-radius: 16px; background: linear-gradient(180deg,#bfe6ff 0%, #eaf6ff 100%); overflow: hidden; }
+    .kp-scenery { position: absolute; inset: 0; overflow: hidden; }
+    .kp-cloud { position: absolute; top: 10px; width: 200px; height: 80px; background: url('Images/Cloud.png') no-repeat center/cover; opacity: .9; filter: drop-shadow(0 2px 2px rgba(0,0,0,.06)); }
+    .kp-cloud--1 { left: -220px; animation: cloud 28s linear infinite; }
+    .kp-cloud--2 { left: -320px; top: 36px; transform: scale(1.1); animation: cloud 36s linear infinite; }
+    .kp-cloud--3 { left: -160px; top: 66px; transform: scale(.9); animation: cloud 22s linear infinite; }
+    @keyframes cloud { to { transform: translateX(160%); } }
+    .kp-grass { position: absolute; left: 0; right: 0; bottom: 0; height: 60px; background: url('Images/Grass.png') repeat-x left bottom/auto 60px; }
+    .kp-piggy { position: absolute; left: 10px; bottom: 30px; width: 150px; height: 150px; background-size: contain; background-repeat: no-repeat; background-image: url('Images/Pig.png'); transition: transform .25s; animation: kp-waddle 1.2s infinite ease-in-out, kp-walk 12s infinite alternate ease-in-out; }
+    .kp-piggy.happy { filter: saturate(1.2); }
+    .kp-piggy.stars { filter: drop-shadow(0 0 6px gold); }
+    .kp-piggy.hearts { filter: drop-shadow(0 0 6px #ff6b81); }
+    @keyframes kp-waddle { 0%,100%{ transform: translateY(0) rotate(0deg);} 50%{ transform: translateY(-4px) rotate(1deg);} }
+    @keyframes kp-walk { 0%{ left: 10px;} 100%{ left: calc(100% - 160px);} }
+    .kp-coins { position: absolute; inset: 0; pointer-events: none; }
+    .kp-coin { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #ffd700); box-shadow: 0 0 8px rgba(255,215,0,.8); }
+    .kp-sparkle { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #ffd700); box-shadow: 0 0 10px rgba(255,215,0,.9); opacity: 1; }
+    .kp-progress { width: 100%; max-width: 520px; height: 16px; background: #f4f4f4; border-radius: 999px; margin: 14px 0 0; overflow: hidden; border: 1px solid #ffd1e8; }
+    .kp-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg,#ff69b4,#ff99c8); transition: width .4s ease; }
+    .kp-alert { margin-top: 14px; background: #fff; border: 1px solid #ff99c8; border-radius: 10px; padding: 12px; max-width: 520px; }
+    .kp-donate-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .kp-select { padding: 8px; border: 1px solid #ddd; border-radius: 8px; }
+    .kp-btn { padding: 8px 14px; border: 0; border-radius: 8px; background: #ff69b4; color: #fff; cursor: pointer; }
+    .kp-btn:hover { background: #ff4fa6; }
+    .kp-note { font-size: 12px; color: #666; margin-top: 8px; }
+    .kp-celebration { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+    .kp-confetti { position: absolute; width: 8px; height: 8px; opacity: .9; }
+    .kp-right { display: flex; flex-direction: column; gap: 16px; }
+    .kp-card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 14px; }
+    .kp-row { display: flex; justify-content: space-between; padding: 6px 0; }
+    .kp-label { color: #666; }
+    .kp-value { font-weight: 600; }
+    .kp-badges { display: flex; gap: 12px; margin-top: 8px; }
+    .kp-badge { width: 64px; height: 64px; position: relative; display: flex; align-items: center; justify-content: center; color: #1e1e1e; font-weight: 800; letter-spacing: 0.5px; background: url('Images/Badge.png') no-repeat center/contain; }
+    .kp-badge .kp-badge-inner { position: relative; z-index: 1; font-size: 28px; font-family: 'Luckiest Guy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #23150b; text-shadow: 0 2px 0 #fff, 0 0 10px rgba(255,255,255,.8), 0 0 2px #000, 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000; }
+    .kp-badge.active { filter: drop-shadow(0 0 10px gold) drop-shadow(0 0 16px rgba(255,215,0,.6)); animation: kp-badge-pop .6s ease; }
+    @keyframes kp-badge-pop { 0%{ transform: scale(.9);} 60%{ transform: scale(1.08);} 100%{ transform: scale(1);} }
+    .kp-hof { margin-top: 10px; padding: 10px; border-radius: 8px; background: #e8fff1; border: 1px solid #9ae6b4; font-weight: 600; }
+
+    @media (max-width: 900px) { .kp-layout { grid-template-columns: 1fr; } .kp-right { order: -1; } }
+  </style>
+</body>
+</html>
