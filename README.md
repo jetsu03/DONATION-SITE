@@ -1,13 +1,13 @@
-# KindnessPiggy - Blockchain Charity Game 🐷
+# KindnessPiggy - Blockchain Charity Game 
 A blockchain-powered charity game where you feed a piggy bank with crypto donations and earn badges for your contributions! Built with Hardhat local blockchain, MetaMask, and real blockchain transactions.
 
-## 🎮 Features
-- 🐷 Interactive piggy bank game with animations
-- 💰 Real blockchain donations on local Hardhat network
-- 🏆 Badge system (1, 2, 3 badges for milestones)
-- 🎉 Celebration animations and confetti
-- 📊 Progress tracking and statistics
-- 🔧 Full Hardhat development environment
+##  Features
+- Interactive piggy bank game with animations
+- Real blockchain donations on local Hardhat network
+- Badge system (1, 2, 3 badges for milestones)
+- Celebration animations and confetti
+- Progress tracking and statistics
+- Full Hardhat development environment
 
 ## **Complete Step-by-Step Guide**
 ### **Prerequisites**
